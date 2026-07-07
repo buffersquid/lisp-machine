@@ -12,4 +12,4 @@ $(OUTDIR)/$(TARGET): $(SRC)
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm -f $(OUTDIR)/$(TARGET)
+	rm -rf $(OUTDIR)
