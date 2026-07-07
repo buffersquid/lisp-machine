@@ -4,11 +4,11 @@
 
 #include "cell.h"
 
+#include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
 
 int main() {
-  fixnum_t six = fixnum(6);
-  printf("%d\n", fixnum_tag(six));
+  word_t six = fixnum(6);
   printf("%d\n", fixnum_value(six));
 }

@@ -14,12 +14,7 @@ typedef enum {
   TRUE
 } tag_t;
 
-typedef struct {
-  word_t _bits;
-} fixnum_t;
-
-fixnum_t fixnum(word_t i);
-tag_t fixnum_tag(fixnum_t f);
-word_t fixnum_value(fixnum_t f);
+word_t fixnum(word_t i);
+word_t fixnum_value(word_t w);
 
 #endif
