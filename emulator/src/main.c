@@ -3,6 +3,7 @@
 // Until I can run the above procs, NO BUILDING A REPL!
 
 #include "cell.h"
+#include "eval.h"
 #include "memory.h"
 
 #include <assert.h>
@@ -11,6 +12,8 @@
 
 int main() {
   mem_init();
-  word_t c = cons(primitive(CAR), cons(fixnum(6), fixnum(7)));
-  printf("%d\n", cons_value(c));
+  // (car (6 . 7)) -> 6
+  // word_t expr = cons(primitive(CAR), cons(fixnum(6), fixnum(7)));
+  word_t result = eval_run(fixnum(67));
+  printf("%d\n", fixnum_value(result));
 }
