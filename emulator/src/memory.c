@@ -1,4 +1,5 @@
 #include "memory.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 word_t memory[MEMORY_SIZE];
@@ -10,10 +11,14 @@ void mem_init(void) {
 }
 
 static void check_memory(void) {
-  if (heap_free >= stack_free)
+  if (heap_free >= stack_free) {
+    fprintf(stderr, "heap pointer > stack pointer\n");
     exit(1);
-  if (heap_free >= MEMORY_SIZE)
+  }
+  if (heap_free >= MEMORY_SIZE) {
+    fprintf(stderr, "heap pointer > MEMORY_SIZE\n");
     exit(1);
+  }
 }
 
 word_t alloc(uint32_t n_words) {
