@@ -1,4 +1,5 @@
 #include "cell.h"
+#include "memory.h"
 #include <assert.h>
 
 #define TAG_SIZE 4
@@ -14,4 +15,15 @@ word_t fixnum(word_t i) {
 word_t fixnum_value(word_t w) {
   assert(tag_of(w) == FIXNUM);
   return payload_of(w);
+}
+
+word_t cons(word_t car, word_t cdr) {
+  word_t loc = alloc(2);
+  memory[loc] = car;
+  memory[loc + 1] = cdr;
+  return (CONS << PAYLOAD_SIZE) | loc;
+}
+word_t cons_value(word_t cons) {
+  assert(tag_of(cons) == CONS);
+  return payload_of(cons);
 }
