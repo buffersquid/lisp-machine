@@ -17,6 +17,14 @@ word_t fixnum_value(word_t w) {
   return payload_of(w);
 }
 
+word_t primitive(primitive_t p) {
+  return (PRIMITIVE << PAYLOAD_SIZE | ((word_t)p & PAYLOAD_MASK));
+}
+word_t primitive_value(word_t primitive) {
+  assert(tag_of(primitive) == PRIMITIVE);
+  return payload_of(primitive);
+}
+
 word_t cons(word_t car, word_t cdr) {
   word_t loc = alloc(2);
   memory[loc] = car;
