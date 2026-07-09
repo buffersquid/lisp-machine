@@ -20,9 +20,9 @@ word_t fixnum_value(word_t w) {
 word_t primitive(primitive_t p) {
   return (PRIMITIVE << PAYLOAD_SIZE | ((word_t)p & PAYLOAD_MASK));
 }
-word_t primitive_value(word_t primitive) {
-  assert(tag_of(primitive) == PRIMITIVE);
-  return payload_of(primitive);
+word_t primitive_value(word_t p) {
+  assert(tag_of(p) == PRIMITIVE);
+  return payload_of(p);
 }
 
 word_t cons(word_t car, word_t cdr) {
@@ -31,7 +31,7 @@ word_t cons(word_t car, word_t cdr) {
   memory[loc + 1] = cdr;
   return (CONS << PAYLOAD_SIZE) | loc;
 }
-word_t cons_value(word_t cons) {
-  assert(tag_of(cons) == CONS);
-  return payload_of(cons);
+word_t cons_value(word_t c) {
+  assert(tag_of(c) == CONS);
+  return payload_of(c);
 }

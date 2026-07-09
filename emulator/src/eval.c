@@ -5,6 +5,8 @@
 #include <stdlib.h>
 
 word_t EXPR, VAL, ENV;
+word_t OP, ARG_EXPR; // OP/ARG_EXPR must be saved to a stack frame before any
+                     // nested S_EVAL, since a recursive eval will clobber them
 state_t STATE;
 
 void eval_init(word_t expr) {
@@ -16,15 +18,58 @@ void eval_step(void) {
   switch (STATE) {
   case S_EVAL:
     switch (tag_of(EXPR)) {
+    case PRIMITIVE:
+      STATE = S_EVAL_SELF;
+      return;
     case FIXNUM:
       STATE = S_EVAL_SELF;
       return;
+    case CONS:
+      STATE = S_CONS_FETCH_OP;
+      return;
     default:
-      STATE = S_ERROR; // Ignore anything other than a fixnum for now
+      STATE = S_ERROR;
       return;
     }
   case S_EVAL_SELF:
     VAL = EXPR;
+    STATE = S_RETURN;
+    return;
+  case S_CONS_FETCH_OP:
+    OP = memory[cons_value(EXPR)];
+    STATE = S_CONS_FETCH_ARG;
+    return;
+  case S_CONS_FETCH_ARG:
+    ARG_EXPR = memory[cons_value(EXPR) + 1];
+    STATE = S_CHECK_OP_TAG;
+    return;
+  case S_CHECK_OP_TAG:
+    if (tag_of(OP) == PRIMITIVE) {
+      STATE = S_APPLY_PRIMITIVE;
+    } else {
+      STATE = S_ERROR;
+    }
+    return;
+  case S_APPLY_PRIMITIVE:
+    switch (primitive_value(OP)) {
+    case CAR:
+      STATE = S_PRIM_CAR;
+      return;
+    case CDR:
+      STATE = S_PRIM_CDR;
+      return;
+    default:
+      STATE = S_ERROR;
+      return;
+    }
+    return;
+  case S_PRIM_CAR:
+    VAL = memory[cons_value(ARG_EXPR)];
+    STATE = S_RETURN;
+    return;
+
+  case S_PRIM_CDR:
+    VAL = memory[cons_value(ARG_EXPR) + 1];
     STATE = S_RETURN;
     return;
   case S_RETURN:
@@ -37,15 +82,18 @@ void eval_step(void) {
   case S_DONE:
     return;
   case S_ERROR:
-    fprintf(stderr, "An error occured\n");
-    exit(1);
+    return;
   }
 }
 
 word_t eval_run(word_t expr) {
   eval_init(expr);
-  while (STATE != S_DONE) {
+  while (STATE != S_DONE && STATE != S_ERROR) {
     eval_step();
+  }
+  if (STATE == S_ERROR) {
+    fprintf(stderr, "An error occured\n");
+    exit(1);
   }
   return VAL;
 }

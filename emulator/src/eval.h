@@ -2,7 +2,21 @@
 #define EVAL_H
 #include "cell.h"
 
-typedef enum { S_EVAL, S_EVAL_SELF, S_RETURN, S_DONE, S_ERROR } state_t;
+typedef enum {
+  S_EVAL,
+  S_EVAL_SELF,
+  S_CONS_FETCH_OP,
+  S_CONS_FETCH_ARG,
+  S_CHECK_OP_TAG,
+  S_APPLY_PRIMITIVE,
+  // Primitive states
+  S_PRIM_CAR,
+  S_PRIM_CDR,
+  // Callback states
+  S_RETURN,
+  S_DONE,
+  S_ERROR
+} state_t;
 
 void eval_init(word_t expr);
 void eval_step(void);
