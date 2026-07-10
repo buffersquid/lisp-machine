@@ -2,7 +2,7 @@
 #define MEMORY_H
 #include "cell.h" // or wherever word_t lives now
 
-#define MEMORY_SIZE (1U << (sizeof(word_t) * 8 - 2))
+#define MEMORY_SIZE 1024
 
 typedef enum { FRAME_EVAL_OP } frame_type_t;
 

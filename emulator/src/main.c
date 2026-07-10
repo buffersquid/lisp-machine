@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-int main() {
+int main(void) {
   mem_init();
   // (car (6 . 7)) -> 6
   word_t expr = cons(primitive(CAR), cons(fixnum(6), fixnum(7)));

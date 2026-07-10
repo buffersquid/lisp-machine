@@ -3,7 +3,7 @@ CFLAGS ?= -O2 -Wall -Wextra -pedantic -Werror
 OUTDIR = bin
 
 TARGET = emulator
-SRC = src/*
+SRC := $(wildcard src/*.c)
 
 all: $(OUTDIR)/$(TARGET)
 
