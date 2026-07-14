@@ -18,6 +18,8 @@ const char *tag_name(tag_t t) {
 tag_t tag_of(word_t w) { return (tag_t)(w >> PAYLOAD_SIZE); }
 word_t payload_of(word_t w) { return w & PAYLOAD_MASK; }
 
+word_t nil(void) { return NIL << PAYLOAD_SIZE; }
+
 word_t fixnum(word_t i) {
   return (FIXNUM << PAYLOAD_SIZE) | (i & PAYLOAD_MASK);
 }

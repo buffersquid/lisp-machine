@@ -23,6 +23,8 @@ typedef enum { CAR, CDR } primitive_t;
 tag_t tag_of(word_t w);
 word_t payload_of(word_t w);
 
+word_t nil(void);
+
 word_t fixnum(word_t i);
 word_t fixnum_value(word_t w);
 

@@ -22,6 +22,10 @@ word_t CYCLE_COUNT;
 
 void eval_init(word_t expr) {
   EXPR = expr;
+  VAL = nil();
+  OP = nil();
+  ARG_EXPR = nil();
+
   STATE = S_EVAL;
   CYCLE_COUNT = 0;
 }
