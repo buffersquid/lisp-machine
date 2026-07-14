@@ -2,24 +2,40 @@
 #define EVAL_H
 #include "cell.h"
 
+#define STATE_LIST                                                             \
+  X(S_EVAL)                                                                    \
+  X(S_EVAL_SELF)                                                               \
+  X(S_CONS_FETCH_OP)                                                           \
+  X(S_CONS_FETCH_ARG)                                                          \
+  X(S_CHECK_OP_TAG)                                                            \
+  X(S_APPLY_PRIMITIVE)                                                         \
+  X(S_PRIM_CAR)                                                                \
+  X(S_PRIM_CDR)                                                                \
+  X(S_RETURN)                                                                  \
+  X(S_DONE)                                                                    \
+  X(S_ERROR)
+
 typedef enum {
-  S_EVAL,
-  S_EVAL_SELF,
-  S_CONS_FETCH_OP,
-  S_CONS_FETCH_ARG,
-  S_CHECK_OP_TAG,
-  S_APPLY_PRIMITIVE,
-  // Primitive states
-  S_PRIM_CAR,
-  S_PRIM_CDR,
-  // Callback states
-  S_RETURN,
-  S_DONE,
-  S_ERROR
+#define X(name) name,
+  STATE_LIST
+#undef X
 } state_t;
 
-void eval_init(word_t expr);
-void eval_step(void);
+const char *state_name(state_t s);
+
+// Defined here so debug.c can use them too
+extern word_t EXPR, VAL, ENV;
+extern word_t OP,
+    ARG_EXPR; // OP/ARG_EXPR must be saved to a stack frame before any
+              // nested S_EVAL, since a recursive eval will clobber them
+extern state_t STATE;
+
+extern word_t CYCLE_COUNT;
+
 word_t eval_run(word_t expr);
+
+// Debug functions
+typedef void (*step_hook_t)(void);
+void eval_set_step_hook(step_hook_t hook); // pass NULL to disable
 
 #endif

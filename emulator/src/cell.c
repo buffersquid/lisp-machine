@@ -6,8 +6,17 @@
 #define PAYLOAD_SIZE (sizeof(word_t) * 8 - TAG_SIZE)
 #define PAYLOAD_MASK 0x0FFFFFFF
 
+const char *tag_name(tag_t t) {
+  static const char *names[] = {
+#define X(name) #name,
+      TAG_LIST
+#undef X
+  };
+  return names[t];
+}
+
 tag_t tag_of(word_t w) { return (tag_t)(w >> PAYLOAD_SIZE); }
-static word_t payload_of(word_t w) { return w & PAYLOAD_MASK; }
+word_t payload_of(word_t w) { return w & PAYLOAD_MASK; }
 
 word_t fixnum(word_t i) {
   return (FIXNUM << PAYLOAD_SIZE) | (i & PAYLOAD_MASK);

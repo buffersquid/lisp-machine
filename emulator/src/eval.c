@@ -4,14 +4,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Debug
+const char *state_name(state_t s) {
+  static const char *names[] = {
+#define X(name) #name,
+      STATE_LIST
+#undef X
+  };
+  return names[s];
+}
+
 word_t EXPR, VAL, ENV;
 word_t OP, ARG_EXPR; // OP/ARG_EXPR must be saved to a stack frame before any
                      // nested S_EVAL, since a recursive eval will clobber them
 state_t STATE;
+word_t CYCLE_COUNT;
 
 void eval_init(word_t expr) {
   EXPR = expr;
   STATE = S_EVAL;
+  CYCLE_COUNT = 0;
 }
 
 void eval_step(void) {
@@ -62,7 +74,6 @@ void eval_step(void) {
       STATE = S_ERROR;
       return;
     }
-    return;
   case S_PRIM_CAR:
     VAL = memory[cons_value(ARG_EXPR)];
     STATE = S_RETURN;
@@ -86,10 +97,17 @@ void eval_step(void) {
   }
 }
 
+static step_hook_t step_hook = NULL;
+void eval_set_step_hook(step_hook_t hook) { step_hook = hook; }
+
 word_t eval_run(word_t expr) {
   eval_init(expr);
   while (STATE != S_DONE && STATE != S_ERROR) {
     eval_step();
+    CYCLE_COUNT++;
+    if (step_hook) {
+      step_hook();
+    }
   }
   if (STATE == S_ERROR) {
     fprintf(stderr, "An error occured\n");
