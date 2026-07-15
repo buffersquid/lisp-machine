@@ -18,7 +18,17 @@ typedef enum {
 
 const char *tag_name(tag_t t);
 
-typedef enum { CAR, CDR } primitive_t;
+#define PRIMITIVE_LIST                                                         \
+  X(CAR)                                                                       \
+  X(CDR)
+
+typedef enum {
+#define X(name) name,
+  PRIMITIVE_LIST
+#undef X
+} primitive_t;
+
+const char *primitive_name(primitive_t t);
 
 tag_t tag_of(word_t w);
 word_t payload_of(word_t w);

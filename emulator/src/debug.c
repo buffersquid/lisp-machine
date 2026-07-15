@@ -7,13 +7,48 @@
 static int running_free = 0; // true after 'c' — skip pausing until stopped
 static int help_shown = 0;
 
+static void print_lisp(word_t w) {
+  switch (tag_of(w)) {
+  case FIXNUM:
+    printf("%u", fixnum_value(w));
+    return;
+  case PRIMITIVE:
+    printf("%s", primitive_name((primitive_t)payload_of(w)));
+    return;
+  case NIL:
+    printf("nil");
+    return;
+  case CONS: {
+    word_t addr = cons_value(w);
+    printf("(");
+    print_lisp(memory[addr]); // car
+    printf(" . ");
+    print_lisp(memory[addr + 1]); // cdr
+    printf(")");
+    return;
+  }
+  }
+}
+
 static void print_registers(void) {
   printf("(%u) STATE = %s\n", CYCLE_COUNT, state_name(STATE));
-  printf("  EXPR     [%s 0x%07X]\n", tag_name(tag_of(EXPR)), payload_of(EXPR));
-  printf("  VAL      [%s 0x%07X]\n", tag_name(tag_of(VAL)), payload_of(VAL));
-  printf("  OP       [%s 0x%07X]\n", tag_name(tag_of(OP)), payload_of(OP));
-  printf("  ARG_EXPR [%s 0x%07X]\n", tag_name(tag_of(ARG_EXPR)),
+
+  printf("  EXPR     [%s 0x%07X] = ", tag_name(tag_of(EXPR)), payload_of(EXPR));
+  print_lisp(EXPR);
+  printf("\n");
+
+  printf("  VAL      [%s 0x%07X] = ", tag_name(tag_of(VAL)), payload_of(VAL));
+  print_lisp(VAL);
+  printf("\n");
+
+  printf("  OP       [%s 0x%07X] = ", tag_name(tag_of(OP)), payload_of(OP));
+  print_lisp(OP);
+  printf("\n");
+
+  printf("  ARG_EXPR [%s 0x%07X] = ", tag_name(tag_of(ARG_EXPR)),
          payload_of(ARG_EXPR));
+  print_lisp(ARG_EXPR);
+  printf("\n");
 }
 
 static void print_heap(void) {

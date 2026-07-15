@@ -106,6 +106,11 @@ void eval_set_step_hook(step_hook_t hook) { step_hook = hook; }
 
 word_t eval_run(word_t expr) {
   eval_init(expr);
+
+  if (step_hook) {
+    step_hook();
+  }
+
   while (STATE != S_DONE && STATE != S_ERROR) {
     eval_step();
     CYCLE_COUNT++;

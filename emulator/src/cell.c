@@ -15,6 +15,15 @@ const char *tag_name(tag_t t) {
   return names[t];
 }
 
+const char *primitive_name(primitive_t t) {
+  static const char *names[] = {
+#define X(name) #name,
+      PRIMITIVE_LIST
+#undef X
+  };
+  return names[t];
+}
+
 tag_t tag_of(word_t w) { return (tag_t)(w >> PAYLOAD_SIZE); }
 word_t payload_of(word_t w) { return w & PAYLOAD_MASK; }
 
