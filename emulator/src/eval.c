@@ -37,6 +37,7 @@ void eval_step(void) {
     case PRIMITIVE:
       STATE = S_EVAL_SELF;
       return;
+    case NIL:
     case FIXNUM:
       STATE = S_EVAL_SELF;
       return;
