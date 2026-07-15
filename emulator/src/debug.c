@@ -7,7 +7,7 @@
 static int running_free = 0; // true after 'c' — skip pausing until stopped
 static int help_shown = 0;
 
-static void print_lisp(word_t w) {
+void print_lisp(word_t w) {
   switch (tag_of(w)) {
   case FIXNUM:
     printf("%u", fixnum_value(w));

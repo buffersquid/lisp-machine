@@ -20,5 +20,6 @@ int main(int argc, char **argv) {
   // (car (6 . 7)) -> 6
   word_t expr = cons(primitive(CAR), cons(fixnum(6), fixnum(7)));
   word_t result = eval_run(expr);
-  printf("%d\n", fixnum_value(result));
+  print_lisp(result);
+  printf("\n");
 }
