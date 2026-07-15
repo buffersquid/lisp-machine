@@ -31,7 +31,7 @@ void print_lisp(word_t w) {
 }
 
 static void print_registers(void) {
-  printf("(%u) STATE = %s\n", CYCLE_COUNT, state_name(STATE));
+  printf("(%u) NEXT STATE = %s\n", CYCLE_COUNT, state_name(STATE));
 
   printf("  EXPR     [%s 0x%07X] = ", tag_name(tag_of(EXPR)), payload_of(EXPR));
   print_lisp(EXPR);

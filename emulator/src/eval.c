@@ -61,19 +61,21 @@ void eval_step(void) {
     STATE = S_CHECK_OP_TAG;
     return;
   case S_CHECK_OP_TAG:
-    if (tag_of(OP) == PRIMITIVE) {
+    switch (tag_of(OP)) {
+    case PRIMITIVE:
       STATE = S_APPLY_PRIMITIVE;
-    } else {
+      return;
+    default:
       STATE = S_ERROR;
+      return;
     }
-    return;
   case S_APPLY_PRIMITIVE:
     switch (primitive_value(OP)) {
-    case OP_CAR:
+    case CAR_OP:
       VAL = memory[cons_value(ARG_EXPR)];
       STATE = S_RETURN;
       return;
-    case OP_CDR:
+    case CDR_OP:
       VAL = memory[cons_value(ARG_EXPR) + 1];
       STATE = S_RETURN;
       return;
@@ -89,7 +91,6 @@ void eval_step(void) {
     }
     return;
   case S_DONE:
-    return;
   case S_ERROR:
     return;
   }

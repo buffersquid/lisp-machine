@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
     eval_set_step_hook(debug_step_hook);
   }
   // (car (6 . 7)) -> 6
-  word_t expr = cons(primitive(OP_CAR), cons(fixnum(6), fixnum(7)));
+  word_t expr = cons(primitive(CAR_OP), cons(fixnum(6), fixnum(7)));
   word_t result = eval_run(expr);
   print_lisp(result);
   printf("\n");
