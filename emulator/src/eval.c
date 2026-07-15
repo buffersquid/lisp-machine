@@ -69,25 +69,18 @@ void eval_step(void) {
     return;
   case S_APPLY_PRIMITIVE:
     switch (primitive_value(OP)) {
-    case CAR:
-      STATE = S_PRIM_CAR;
+    case OP_CAR:
+      VAL = memory[cons_value(ARG_EXPR)];
+      STATE = S_RETURN;
       return;
-    case CDR:
-      STATE = S_PRIM_CDR;
+    case OP_CDR:
+      VAL = memory[cons_value(ARG_EXPR) + 1];
+      STATE = S_RETURN;
       return;
     default:
       STATE = S_ERROR;
       return;
     }
-  case S_PRIM_CAR:
-    VAL = memory[cons_value(ARG_EXPR)];
-    STATE = S_RETURN;
-    return;
-
-  case S_PRIM_CDR:
-    VAL = memory[cons_value(ARG_EXPR) + 1];
-    STATE = S_RETURN;
-    return;
   case S_RETURN:
     if (stack_empty()) {
       STATE = S_DONE;

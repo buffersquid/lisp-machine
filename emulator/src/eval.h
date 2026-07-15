@@ -9,8 +9,6 @@
   X(S_CONS_FETCH_ARG)                                                          \
   X(S_CHECK_OP_TAG)                                                            \
   X(S_APPLY_PRIMITIVE)                                                         \
-  X(S_PRIM_CAR)                                                                \
-  X(S_PRIM_CDR)                                                                \
   X(S_RETURN)                                                                  \
   X(S_DONE)                                                                    \
   X(S_ERROR)

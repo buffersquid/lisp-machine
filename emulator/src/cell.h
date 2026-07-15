@@ -19,8 +19,9 @@ typedef enum {
 const char *tag_name(tag_t t);
 
 #define PRIMITIVE_LIST                                                         \
-  X(CAR)                                                                       \
-  X(CDR)
+  X(OP_CAR)                                                                    \
+  X(OP_CDR)                                                                    \
+  X(OP_CONS)
 
 typedef enum {
 #define X(name) name,
