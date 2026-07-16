@@ -37,6 +37,10 @@ static void print_registers(void) {
   print_lisp(EXPR);
   printf("\n");
 
+  printf("  ENV      [%s 0x%07X] = ", tag_name(tag_of(ENV)), payload_of(ENV));
+  print_lisp(ENV);
+  printf("\n");
+
   printf("  VAL      [%s 0x%07X] = ", tag_name(tag_of(VAL)), payload_of(VAL));
   print_lisp(VAL);
   printf("\n");
@@ -54,17 +58,25 @@ static void print_registers(void) {
 static void print_heap(void) {
   printf("heap [0 .. %u):\n", heap_free);
   for (word_t i = 0; i < heap_free; i++) {
-    printf("  0x%04X: [%s 0x%07X]\n", i, tag_name(tag_of(memory[i])),
+    printf("  0x%04X: [%s 0x%07X] = ", i, tag_name(tag_of(memory[i])),
            payload_of(memory[i]));
+    print_lisp(memory[i]);
+    printf("\n");
   }
 }
 
 static void print_stack(void) {
   printf("stack [0x%04X .. top):\n", stack_free);
   for (word_t i = stack_free; i < MEMORY_SIZE - 1; i += 5) {
-    printf("  frame @0x%04X: type=%u env=0x%X a=0x%X b=0x%X c=0x%X\n", i,
-           memory[i], memory[i + 1], memory[i + 2], memory[i + 3],
-           memory[i + 4]);
+    printf("  frame @0x%04X: type=%s, env=", i, frame_type_name(memory[i]));
+    print_lisp(memory[i + 1]);
+    printf(" a=");
+    print_lisp(memory[i + 2]);
+    printf(" b=");
+    print_lisp(memory[i + 3]);
+    printf(" c=");
+    print_lisp(memory[i + 4]);
+    printf("\n");
   }
 }
 

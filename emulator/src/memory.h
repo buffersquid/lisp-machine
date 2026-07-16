@@ -4,7 +4,15 @@
 
 #define MEMORY_SIZE 1024
 
-typedef enum { FRAME_EVAL_OP } frame_type_t;
+#define FRAME_TYPE_LIST X(FRAME_APPLY_PRIMITIVE)
+
+typedef enum {
+#define X(name) name,
+  FRAME_TYPE_LIST
+#undef X
+} frame_type_t;
+
+const char *frame_type_name(frame_type_t s);
 
 extern word_t memory[MEMORY_SIZE];
 extern word_t heap_free, stack_free;

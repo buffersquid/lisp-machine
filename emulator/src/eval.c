@@ -25,6 +25,7 @@ void eval_init(word_t expr) {
   VAL = nil();
   OP = nil();
   ARG_EXPR = nil();
+  ENV = nil();
 
   STATE = S_EVAL;
   CYCLE_COUNT = 0;

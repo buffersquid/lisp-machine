@@ -5,6 +5,16 @@
 word_t memory[MEMORY_SIZE];
 word_t heap_free, stack_free;
 
+// Debug
+const char *frame_type_name(frame_type_t s) {
+  static const char *names[] = {
+#define X(name) #name,
+      FRAME_TYPE_LIST
+#undef X
+  };
+  return names[s];
+}
+
 void mem_init(void) {
   heap_free = 0;
   stack_free = MEMORY_SIZE - 1;
