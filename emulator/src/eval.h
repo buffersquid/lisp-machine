@@ -22,10 +22,7 @@ typedef enum {
 const char *state_name(state_t s);
 
 // Defined here so debug.c can use them too
-extern word_t EXPR, VAL, ENV;
-extern word_t OP,
-    ARG_EXPR; // OP/ARG_EXPR must be saved to a stack frame before any
-              // nested S_EVAL, since a recursive eval will clobber them
+extern word_t EXPR, VAL, ENV, OP, REMAINING_ARGS;
 extern state_t STATE;
 
 extern word_t CYCLE_COUNT;

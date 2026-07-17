@@ -49,9 +49,9 @@ static void print_registers(void) {
   print_lisp(OP);
   printf("\n");
 
-  printf("  ARG_EXPR [%s 0x%07X] = ", tag_name(tag_of(ARG_EXPR)),
-         payload_of(ARG_EXPR));
-  print_lisp(ARG_EXPR);
+  printf("  REM_ARGS [%s 0x%07X] = ", tag_name(tag_of(REMAINING_ARGS)),
+         payload_of(REMAINING_ARGS));
+  print_lisp(REMAINING_ARGS);
   printf("\n");
 }
 
