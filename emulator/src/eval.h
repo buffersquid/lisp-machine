@@ -7,8 +7,10 @@
   X(S_EVAL_SELF)                                                               \
   X(S_CONS_FETCH_OP)                                                           \
   X(S_CONS_FETCH_ARG)                                                          \
-  X(S_CHECK_OP_TAG)                                                            \
+  X(S_EVAL_ARG)                                                                \
   X(S_APPLY_PRIMITIVE)                                                         \
+  X(S_REVERSE_ARGS)                                                            \
+  X(S_DISPATCH_APPLY)                                                          \
   X(S_RETURN)                                                                  \
   X(S_DONE)                                                                    \
   X(S_ERROR)

@@ -4,7 +4,7 @@
 
 #define MEMORY_SIZE 1024
 
-#define FRAME_TYPE_LIST X(FRAME_APPLY_PRIMITIVE)
+#define FRAME_TYPE_LIST X(FRAME_EVAL_ARG)
 
 typedef enum {
 #define X(name) name,

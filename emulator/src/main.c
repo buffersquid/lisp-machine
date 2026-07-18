@@ -17,8 +17,16 @@ int main(int argc, char **argv) {
     printf("[ALERT] running in debug mode\n");
     eval_set_step_hook(debug_step_hook);
   }
-  // (car (6 . 7)) -> 6
-  word_t expr = cons(primitive(CAR_OP), cons(fixnum(6), fixnum(7)));
+  // (cons (car (cons 1 2)) (cdr (cons 3 4)))
+  word_t expr2 = cons(
+      primitive(CDR_OP),
+      cons(cons(primitive(CONS_OP), cons(fixnum(3), cons(fixnum(4), nil()))),
+           nil()));
+  word_t expr1 = cons(
+      primitive(CAR_OP),
+      cons(cons(primitive(CONS_OP), cons(fixnum(1), cons(fixnum(2), nil()))),
+           nil()));
+  word_t expr = cons(primitive(CONS_OP), cons(expr1, cons(expr2, nil())));
   word_t result = eval_run(expr);
   print_lisp(result);
   printf("\n");
