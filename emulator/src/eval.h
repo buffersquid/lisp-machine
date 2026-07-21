@@ -11,7 +11,8 @@
   X(S_CONS_FETCH_ARG)                                                          \
   X(S_EVAL_ARG)                                                                \
   X(S_CAR_GOT_ARG)                                                             \
-  X(S_CAR_GOT_CAR)                                                             \
+  X(S_CDR_GOT_ARG)                                                             \
+  X(S_MEM_RESULT_TO_VAL)                                                       \
   X(S_APPLY_PRIMITIVE)                                                         \
   X(S_REVERSE_ARGS)                                                            \
   X(S_DISPATCH_APPLY)                                                          \

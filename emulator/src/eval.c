@@ -120,13 +120,19 @@ void eval_step(void) {
   // Primitives
   case S_CAR_GOT_ARG:
     MAR = cons_value(MDR); // MDR now holds the (already-evaluated) argument
-    RET = S_CAR_GOT_CAR;
+    RET = S_MEM_RESULT_TO_VAL;
     STATE = S_MEM_READ;
     return;
 
-  case S_CAR_GOT_CAR:
+  case S_MEM_RESULT_TO_VAL:
     VAL = MDR;
     STATE = S_RETURN;
+    return;
+
+  case S_CDR_GOT_ARG:
+    MAR = cons_value(MDR) + 1;
+    RET = S_MEM_RESULT_TO_VAL;
+    STATE = S_MEM_READ;
     return;
 
   case S_APPLY_PRIMITIVE: {
@@ -139,8 +145,9 @@ void eval_step(void) {
     }
 
     case CDR_OP: {
-      VAL = memory[cons_value(memory[cons_value(REMAINING_ARGS)]) + 1];
-      STATE = S_RETURN;
+      MAR = cons_value(REMAINING_ARGS);
+      RET = S_CDR_GOT_ARG;
+      STATE = S_MEM_READ;
       return;
     }
 
