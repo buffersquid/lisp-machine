@@ -7,17 +7,25 @@
 static int running_free = 0; // true after 'c' — skip pausing until stopped
 static int help_shown = 0;
 
+#define DEPTH_MAX 1000
+
 void print_lisp(word_t w) {
+  static int depth = 0;
+  if (depth > DEPTH_MAX) {
+    printf("...");
+    return;
+  }
+  depth++;
   switch (tag_of(w)) {
   case FIXNUM:
     printf("%u", fixnum_value(w));
-    return;
+    break;
   case PRIMITIVE:
     printf("%s", primitive_name((primitive_t)payload_of(w)));
-    return;
+    break;
   case NIL:
     printf("nil");
-    return;
+    break;
   case CONS: {
     word_t addr = cons_value(w);
     printf("(");
@@ -25,9 +33,10 @@ void print_lisp(word_t w) {
     printf(" . ");
     print_lisp(memory[addr + 1]); // cdr
     printf(")");
-    return;
+    break;
   }
   }
+  depth--;
 }
 
 static void print_registers(void) {
@@ -65,17 +74,33 @@ static void print_heap(void) {
   }
 }
 
+static void print_frame_fields(word_t frame_type, word_t a, word_t b,
+                               word_t c) {
+  switch (frame_type) {
+  case FRAME_EVAL_ARG:
+    printf(" op=");
+    print_lisp(a);
+    printf(" evaled-args=");
+    print_lisp(b);
+    printf(" remaining=");
+    print_lisp(c);
+    return;
+  default:
+    // Unknown/future frame type — don't assume these are taggeed Lisp
+    // words. Print raw so nothing crashes and it's obvious this frame
+    // type hasn't been given real labels yet.
+    printf(" a=0x%07X b=0x%07X c=0x%07X", a, b, c);
+    return;
+  }
+}
+
 static void print_stack(void) {
   printf("stack [0x%04X .. top):\n", stack_free);
   for (word_t i = stack_free; i < MEMORY_SIZE - 1; i += 5) {
-    printf("  frame @0x%04X: type=%s, env=", i, frame_type_name(memory[i]));
-    print_lisp(memory[i + 1]);
-    printf(" a=");
-    print_lisp(memory[i + 2]);
-    printf(" b=");
-    print_lisp(memory[i + 3]);
-    printf(" c=");
-    print_lisp(memory[i + 4]);
+    word_t frame_type = memory[i];
+    printf("  frame @0x%04X: type=%s, env=", i, frame_type_name(frame_type));
+    print_lisp(memory[i + 1]); // saved_env — always a real Lisp value
+    print_frame_fields(frame_type, memory[i + 2], memory[i + 3], memory[i + 4]);
     printf("\n");
   }
 }
