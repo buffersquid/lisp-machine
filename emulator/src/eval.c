@@ -14,8 +14,18 @@ const char *state_name(state_t s) {
   return names[s];
 }
 
+// Eval registers
 word_t EXPR, VAL, ENV, OP, REMAINING_ARGS;
-state_t STATE;
+
+// memory registers
+// MAR (memory address register - holds the address for the pending access)
+// MDR (memory data register - holds the word read, or the word to be written)
+word_t MAR, MDR;
+
+// State control
+state_t STATE, RET;
+
+// Debug
 word_t CYCLE_COUNT;
 
 void eval_init(word_t expr) {
@@ -25,12 +35,25 @@ void eval_init(word_t expr) {
   REMAINING_ARGS = nil();
   ENV = nil();
 
+  MAR = MDR = 0;
+  RET = S_ERROR;
+
   STATE = S_EVAL;
   CYCLE_COUNT = 0;
 }
 
 void eval_step(void) {
   switch (STATE) {
+  case S_MEM_READ:
+    MDR = memory[MAR];
+    STATE = RET;
+    return;
+
+  case S_MEM_WRITE:
+    memory[MAR] = MDR;
+    STATE = RET;
+    return;
+
   case S_EVAL:
     switch (tag_of(EXPR)) {
 
@@ -94,11 +117,24 @@ void eval_step(void) {
     }
   }
 
+  // Primitives
+  case S_CAR_GOT_ARG:
+    MAR = cons_value(MDR); // MDR now holds the (already-evaluated) argument
+    RET = S_CAR_GOT_CAR;
+    STATE = S_MEM_READ;
+    return;
+
+  case S_CAR_GOT_CAR:
+    VAL = MDR;
+    STATE = S_RETURN;
+    return;
+
   case S_APPLY_PRIMITIVE: {
     switch (primitive_value(OP)) {
     case CAR_OP: {
-      VAL = memory[cons_value(memory[cons_value(REMAINING_ARGS)])];
-      STATE = S_RETURN;
+      MAR = cons_value(REMAINING_ARGS);
+      RET = S_CAR_GOT_ARG;
+      STATE = S_MEM_READ;
       return;
     }
 

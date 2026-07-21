@@ -62,6 +62,14 @@ static void print_registers(void) {
          payload_of(REMAINING_ARGS));
   print_lisp(REMAINING_ARGS);
   printf("\n");
+
+  printf("  MAR      0x%04X\n", MAR);
+
+  printf("  MDR      [%s 0x%07X] = ", tag_name(tag_of(MDR)), payload_of(MDR));
+  print_lisp(MDR);
+  printf("\n");
+
+  printf("  RET      -> %s\n", state_name(RET));
 }
 
 static void print_heap(void) {
