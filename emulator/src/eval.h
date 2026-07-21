@@ -11,6 +11,7 @@
   X(S_APPLY_PRIMITIVE)                                                         \
   X(S_REVERSE_ARGS)                                                            \
   X(S_DISPATCH_APPLY)                                                          \
+  X(S_FOLD_ARGS)                                                               \
   X(S_RETURN)                                                                  \
   X(S_DONE)                                                                    \
   X(S_ERROR)

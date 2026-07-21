@@ -21,7 +21,8 @@ const char *tag_name(tag_t t);
 #define PRIMITIVE_LIST                                                         \
   X(CAR_OP)                                                                    \
   X(CDR_OP)                                                                    \
-  X(CONS_OP)
+  X(CONS_OP)                                                                   \
+  X(PLUS_OP)
 
 typedef enum {
 #define X(name) name,

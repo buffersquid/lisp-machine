@@ -71,6 +71,11 @@ void eval_step(void) {
   }
 
   case S_EVAL_ARG: {
+    if (tag_of(REMAINING_ARGS) == NIL) {
+      STATE = S_DISPATCH_APPLY;
+      return;
+    }
+
     switch (tag_of(OP)) {
     case PRIMITIVE: {
       word_t car = memory[cons_value(REMAINING_ARGS)];
@@ -113,10 +118,45 @@ void eval_step(void) {
       return;
     }
 
+    case PLUS_OP: {
+      if (tag_of(REMAINING_ARGS) == NIL) {
+        VAL = fixnum(0);
+        STATE = S_RETURN;
+        return;
+      }
+      VAL = memory[cons_value(REMAINING_ARGS)];
+      REMAINING_ARGS = memory[cons_value(REMAINING_ARGS) + 1];
+      STATE = S_FOLD_ARGS;
+      return;
+    }
+
     default:
       STATE = S_ERROR;
       return;
     }
+  }
+
+  case S_FOLD_ARGS: {
+    if (tag_of(REMAINING_ARGS) == NIL) {
+      STATE = S_RETURN;
+      return;
+    }
+    word_t arg = memory[cons_value(REMAINING_ARGS)];      // car
+    word_t next = memory[cons_value(REMAINING_ARGS) + 1]; // cdr
+
+    switch (primitive_value(OP)) {
+    case PLUS_OP: {
+      VAL = fixnum(fixnum_value(VAL) + fixnum_value(arg));
+      break;
+    }
+    default: {
+      STATE = S_ERROR;
+      return;
+    }
+    }
+
+    REMAINING_ARGS = next;
+    return; // Stay in S_FOLD_ARGS until done
   }
 
   // Deliberately a separate state rather than jumping straight to
